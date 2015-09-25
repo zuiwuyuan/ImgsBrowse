@@ -1,11 +1,10 @@
 package com.lnyp.imgbrowse;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Window;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -17,6 +16,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -90,7 +90,20 @@ public class MainActivity extends Activity implements KechengAdapter.OnImgClickL
     @Override
     public void handleBrowse(int position) {
 
-        PopupWindow popupWindow = new ImgBrowsePop(this, cks,position);
-        popupWindow.showAtLocation(main_layout, Gravity.CENTER, 0, 0);
+//        PopupWindow popupWindow = new ImgBrowsePop(this, cks,position);
+//        popupWindow.showAtLocation(main_layout, Gravity.CENTER, 0, 0);
+
+        ArrayList<String> imgs = new ArrayList<>();
+
+        for (KeCheng data : cks) {
+
+            imgs.add(data.picBig);
+        }
+
+        Intent intent = new Intent(this, ImageBrowseActivity.class);
+        intent.putExtra("position", position);
+        intent.putStringArrayListExtra("imgs", imgs);
+        startActivity(intent);
+
     }
 }

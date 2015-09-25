@@ -11,15 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.polites.android.GestureImageView;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 图片浏览弹出框
- *
+ * 图片浏览弹出框，不建议使用，测试后发现，比使用Activity来进行图片浏览效率要慢太多
  */
+@Deprecated
 public class ImgBrowsePop extends PopupWindow {
 
     private ViewPager search_viewpager;
@@ -34,7 +32,7 @@ public class ImgBrowsePop extends PopupWindow {
 
     private View window;
 
-    public ImgBrowsePop(Activity context, List<KeCheng> datas,int position) {
+    public ImgBrowsePop(Activity context, List<KeCheng> datas, int position) {
         super(context);
 
         this.position = position;
@@ -44,6 +42,7 @@ public class ImgBrowsePop extends PopupWindow {
 
         img_browse_back = (ImageView) window.findViewById(R.id.img_browse_back);
         search_viewpager = (ViewPager) window.findViewById(R.id.imgs_viewpager);
+        search_viewpager.setOffscreenPageLimit(4);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -51,16 +50,18 @@ public class ImgBrowsePop extends PopupWindow {
 
         for (KeCheng data : datas) {
 
-            GestureImageView iv = new GestureImageView(context);
-            iv.setLayoutParams(params);
-            iv.setScaleType(ImageView.ScaleType.FIT_XY);
+//            GestureImageView iv = new GestureImageView(context);
+//            iv.setLayoutParams(params);
+//            iv.setScaleType(ImageView.ScaleType.FIT_XY);
+//
+//            ImageLoaderUtil.getInstance().displayListItemImage(data.picBig, iv);
 
-            ImageLoaderUtil.getInstance().displayListItemImage(data.picBig, iv);
+//            views.add(iv);
 
-            views.add(iv);
+            imgs.add(data.picBig);
         }
 
-        PagerAdapter adapter = new MyViewPagerAdapter(context, views);
+        PagerAdapter adapter = new MyViewPagerAdapter(context, imgs);
         search_viewpager.setAdapter(adapter);
         search_viewpager.setCurrentItem(position);
 
@@ -79,41 +80,5 @@ public class ImgBrowsePop extends PopupWindow {
                 dismiss();
             }
         });
-    }
-}
-
-class MyViewPagerAdapter extends PagerAdapter {
-
-    List<View> views;
-
-    Context mContext;
-
-    public MyViewPagerAdapter(Context context, List<View> views) {
-
-        this.mContext = context;
-        this.views = views;
-    }
-
-    @Override
-    public int getCount() { // 获得size
-        return views.size();
-    }
-
-    @Override
-    public boolean isViewFromObject(View arg0, Object arg1) {
-        return arg0 == arg1;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-
-        container.removeView(views.get(position));//删除页卡
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-
-        container.addView(views.get(position), 0);//添加页卡
-        return views.get(position);
     }
 }
