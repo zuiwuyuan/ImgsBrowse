@@ -1,6 +1,6 @@
 package com.lnyp.imgbrowse;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -8,17 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.lidroid.xutils.util.LogUtils;
+
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MyViewPagerAdapter extends PagerAdapter {
 
     List<String> imgs;
 
-    Context mContext;
+    Activity mContext;
 
-    public MyViewPagerAdapter(Context context, List<String> imgs) {
+    public MyViewPagerAdapter(Activity context, List<String> imgs) {
 
         this.mContext = context;
         this.imgs = imgs;
@@ -50,6 +53,24 @@ public class MyViewPagerAdapter extends PagerAdapter {
         ImageLoaderUtil.getInstance().displayListItemImage(imgs.get(position), img);
 
         ((ViewPager) container).addView(view);
+
+        // 点击图片
+        img.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                LogUtils.e("---------------setOnPhotoTapListener--------------------");
+            }
+        });
+
+        //点击图片外
+        img.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                LogUtils.e("---------------setOnViewTapListener--------------------");
+
+                mContext.finish();
+            }
+        });
 
         return view;
 
